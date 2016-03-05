@@ -1,8 +1,15 @@
 ﻿{
-  "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
-    "Xamarin.Forms": "2.0.0.6482"
-  },
+    "dependencies": {
+        "Humanizer": "1.37.7",
+        "Microsoft.Azure.Mobile.Client": "2.0.1",
+        "Microsoft.Azure.Mobile.Client.SQLiteStore": "2.0.1",
+        "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
+        "Newtonsoft.Json": "8.0.2",
+        "Refractored.MvvmHelpers": "1.0.1",
+        "Xam.Plugin.Connectivity": "2.1.1",
+        "Xam.Plugins.Settings": "2.1.0",
+        "Xamarin.Forms": "2.0.0.6482"
+    },
   "frameworks": {
     "uap10.0": {}
   },
