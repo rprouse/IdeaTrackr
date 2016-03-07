@@ -13,25 +13,18 @@
             </Grid.RowDefinitions>
             <ListView
                 Grid.Row="0"
-                GroupDisplayBinding="{Binding Key}"
-                IsGroupingEnabled="true"
                 HasUnevenRows="true"
-                ItemsSource="{Binding IdeasGrouped}"
+                ItemsSource="{Binding Ideas}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 RefreshCommand="{Binding LoadIdeasCommand}"
                 x:Name="ListViewIdeas">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                <Label Text="{Binding Name}" Style="{DynamicResource ListItemTextStyle}" HorizontalOptions="FillAndExpand" />
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding DateDisplay}" />
-                                    <Label Text="{Binding Status}" HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End" />
-                                </StackLayout>
-                            </StackLayout>
-                        </ViewCell>
+                        <TextCell
+                            Text="{Binding Name}"
+                            Detail="{Binding Description}"
+                            />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

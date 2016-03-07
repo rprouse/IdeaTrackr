@@ -21,7 +21,6 @@ namespace IdeaTrackr.ViewModel
         AzureService _service = new AzureService();
 
         public ObservableRangeCollection<Idea> Ideas { get; } = new ObservableRangeCollection<Idea>();
-        public ObservableRangeCollection<Grouping<string, Idea>> IdeasGrouped { get; } = new ObservableRangeCollection<Grouping<string, Idea>>();
 
         string loadingMessage;
         public string LoadingMessage
@@ -52,7 +51,6 @@ namespace IdeaTrackr.ViewModel
                 IsBusy = true;
                 var ideas = await _service.GetIdeas();
                 Ideas.ReplaceRange(ideas);
-                SortIdeas();
             }
             catch (Exception ex)
             {
@@ -68,18 +66,6 @@ namespace IdeaTrackr.ViewModel
             {
                 IsBusy = false;
             }
-        }
-
-        void SortIdeas()
-        {
-            var groups = from idea in Ideas
-                         orderby idea.DateUtc descending
-                         group idea by idea.Status
-                into ideaGroup
-                         select new Grouping<string, Idea>($"{ideaGroup.Key} ({ideaGroup.Count()})", ideaGroup);
-
-
-            IdeasGrouped.ReplaceRange(groups);
         }
 
         public ICommand AddIdeaCommand =>
@@ -104,8 +90,6 @@ namespace IdeaTrackr.ViewModel
 
             //        var ideas = await azureService.GetIdeas();
             //        Ideas.ReplaceRange(ideas);
-
-            //        SortIdeas();
             //    }
             //    else
             //    {
@@ -114,9 +98,8 @@ namespace IdeaTrackr.ViewModel
             //    }
             //    Xamarin.Insights.Track("IdeaAdded");
 
-            //    var coffee = await azureService.AddIdea(AtHome);
-            //    Ideas.Add(coffee);
-            //    SortIdeas();
+            //    var idea = await azureService.AddIdea(AtHome);
+            //    Ideas.Add(idea);
             //}
             //catch (Exception ex)
             //{
