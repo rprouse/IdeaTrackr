@@ -1,4 +1,5 @@
 ﻿using IdeaTrackr.Helpers;
+using IdeaTrackr.Model;
 using IdeaTrackr.ViewModel;
 using Plugin.Connectivity;
 using System;
@@ -13,17 +14,31 @@ namespace IdeaTrackr.View
 {
     public partial class IdeaListView : ContentPage
     {
-        IdeaListViewModel vm;
+        IdeaListViewModel _viewModel;
 
         public IdeaListView()
         {
             InitializeComponent();
             
-            BindingContext = vm = new IdeaListViewModel();
-            ListViewIdeas.ItemTapped += (sender, e) =>
+            BindingContext = _viewModel = new IdeaListViewModel(Navigation);
+
+            string addIcon = null;
+            switch (Device.OS)
             {
-                if (Device.OS == TargetPlatform.iOS || Device.OS == TargetPlatform.Android)
-                    ListViewIdeas.SelectedItem = null;
+                case TargetPlatform.Android:
+                    addIcon = "ic_menu_add";
+                    break;
+                case TargetPlatform.WinPhone:
+                    addIcon = "add.png";
+                    break;
+            }
+            ToolbarItems.Add(new ToolbarItem("Add", addIcon,
+                async () => await _viewModel.AddIdea(), ToolbarItemOrder.Primary));
+
+
+            ListViewIdeas.ItemTapped += async (sender, e) =>
+            {
+                await _viewModel.ShowIdeaView(e.Item as Idea);
             };
 
             if (Device.OS != TargetPlatform.iOS && Device.OS != TargetPlatform.Android)
@@ -31,7 +46,7 @@ namespace IdeaTrackr.View
                 ToolbarItems.Add(new ToolbarItem
                 {
                     Text = "Refresh",
-                    Command = vm.LoadIdeasCommand
+                    Command = _viewModel.LoadIdeasCommand
                 });
             }
         }
@@ -42,8 +57,8 @@ namespace IdeaTrackr.View
 
             CrossConnectivity.Current.ConnectivityChanged += ConnecitvityChanged;
             OfflineStack.IsVisible = !CrossConnectivity.Current.IsConnected;
-            if (vm.Ideas.Count == 0 && Settings.IsLoggedIn)
-                vm.LoadIdeasCommand.Execute(null);
+            if (_viewModel.Ideas.Count == 0 && Settings.IsLoggedIn)
+                _viewModel.LoadIdeasCommand.Execute(null);
         }
 
         protected override void OnDisappearing()

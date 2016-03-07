@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IdeaTrackr.View.IdeaView"
+             Title="Idea Trackr">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="#727272" />
+                <Setter Property="FontSize" Value="Small" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <OnPlatform.iOS>0, 20, 0, 0</OnPlatform.iOS>
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ScrollView Orientation="Vertical">
+        <StackLayout Orientation="Vertical" Padding="8, 8" Spacing="10">
+            <Label Text="Idea" />
+            <Entry Text="{Binding Idea.Name, Mode=TwoWay}" Placeholder="New idea" />
+
+            <Label Text="Description" />
+            <Editor Text="{Binding Idea.Description, Mode=TwoWay}" />
+
+            <Button Text="Save" Command="{Binding SaveCommand}" />
+            <!-- <Button Text="Delete" Command="{Binding DeleteCommand}" /> -->
+            <Button Text="Cancel" Command="{Binding CancelCommand}" />
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

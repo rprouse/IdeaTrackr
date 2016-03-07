@@ -1,4 +1,5 @@
-﻿using IdeaTrackr.View;
+﻿using IdeaTrackr.Services;
+using IdeaTrackr.View;
 
 using Xamarin.Forms;
 
@@ -6,6 +7,8 @@ namespace IdeaTrackr
 {
     public class App : Application
     {
+        public static AzureService AzureService { get; } = new AzureService();
+
         public App()
         {
             // The root page of your application

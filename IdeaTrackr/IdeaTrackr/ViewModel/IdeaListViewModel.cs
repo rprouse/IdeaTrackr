@@ -1,13 +1,10 @@
 ﻿using FormsToolkit;
+using IdeaTrackr.Helpers;
 using IdeaTrackr.Model;
-using IdeaTrackr.Services;
-using Microsoft.WindowsAzure.MobileServices;
+using IdeaTrackr.View;
 using MvvmHelpers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,15 +15,20 @@ namespace IdeaTrackr.ViewModel
     {
         ICommand _loadIdeasCommand;
         ICommand _addIdeaCommand;
-        AzureService _service = new AzureService();
+        string _loadingMessage;
 
+        INavigation _navigation;
         public ObservableRangeCollection<Idea> Ideas { get; } = new ObservableRangeCollection<Idea>();
 
-        string loadingMessage;
+        public IdeaListViewModel(INavigation navigation)
+        {
+            _navigation = navigation;
+        }
+
         public string LoadingMessage
         {
-            get { return loadingMessage; }
-            set { SetProperty(ref loadingMessage, value); }
+            get { return _loadingMessage; }
+            set { SetProperty(ref _loadingMessage, value); }
         }
         
         public ICommand LoadIdeasCommand =>
@@ -39,17 +41,17 @@ namespace IdeaTrackr.ViewModel
 
             try
             {
-                //if (!Settings.IsLoggedIn)
-                //{
-                //    await azureService.Initialize();
+                if (!Settings.IsLoggedIn)
+                {
+                    await App.AzureService.Initialize();
                 //    var user = await DependencyService.Get<IAuthentication>().LoginAsync(azureService.MobileService, MobileServiceAuthenticationProvider.MicrosoftAccount);
                 //    if (user == null)
                 //        return;
-                //}
+                }
                 
                 LoadingMessage = "Loading Ideas...";
                 IsBusy = true;
-                var ideas = await _service.GetIdeas();
+                var ideas = await App.AzureService.GetIdeas();
                 Ideas.ReplaceRange(ideas);
             }
             catch (Exception ex)
@@ -68,48 +70,15 @@ namespace IdeaTrackr.ViewModel
             }
         }
 
-        public ICommand AddIdeaCommand =>
-            _addIdeaCommand ?? (_addIdeaCommand = new Command(async () => await ExecuteAddIdeaCommandAsync()));
-
-        async Task ExecuteAddIdeaCommandAsync()
+        public async Task AddIdea()
         {
-            //if (IsBusy)
-            //    return;
+            await ShowIdeaView(new Idea());
+        }
 
-            //try
-            //{
-            //    if (!Settings.IsLoggedIn)
-            //    {
-            //        await azureService.Initialize();
-            //        var user = await DependencyService.Get<IAuthentication>().LoginAsync(azureService.MobileService, MobileServiceAuthenticationProvider.MicrosoftAccount);
-            //        if (user == null)
-            //            return;
-
-            //        LoadingMessage = "Adding Idea...";
-            //        IsBusy = true;
-
-            //        var ideas = await azureService.GetIdeas();
-            //        Ideas.ReplaceRange(ideas);
-            //    }
-            //    else
-            //    {
-            //        LoadingMessage = "Adding Idea...";
-            //        IsBusy = true;
-            //    }
-            //    Xamarin.Insights.Track("IdeaAdded");
-
-            //    var idea = await azureService.AddIdea(AtHome);
-            //    Ideas.Add(idea);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine(ex);
-            //    Xamarin.Insights.Report(ex);
-            //}
-            //finally
-            //{
-            //    IsBusy = false;
-            //}
+        public async Task ShowIdeaView(Idea idea)
+        {
+            var ideaPage = new IdeaView(idea);
+            await _navigation.PushAsync(ideaPage);
         }
     }
 }
