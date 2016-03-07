@@ -1,13 +1,11 @@
-﻿using IdeaTrackr.Model;
+﻿using IdeaTrackr.Helpers;
+using IdeaTrackr.Model;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using Microsoft.WindowsAzure.MobileServices.Sync;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IdeaTrackr.Services
@@ -24,7 +22,15 @@ namespace IdeaTrackr.Services
                 return;
 
             //Create our client
-            MobileService = new MobileServiceClient("https://ideatrackr.azurewebsites.net");
+            var handler = new AuthHandler();
+            MobileService = new MobileServiceClient("https://ideatrackr.azurewebsites.net", handler);
+            handler.Client = MobileService;
+
+            if (!string.IsNullOrWhiteSpace(Settings.AuthToken) && !string.IsNullOrWhiteSpace(Settings.UserId))
+            {
+                MobileService.CurrentUser = new MobileServiceUser(Settings.UserId);
+                MobileService.CurrentUser.MobileServiceAuthenticationToken = Settings.AuthToken;
+            }
 
             const string path = "syncstore.db";
             //setup our local sqlite store and intialize our table

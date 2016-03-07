@@ -1,5 +1,7 @@
 ﻿using IdeaTrackr.Helpers;
+using IdeaTrackr.Interfaces;
 using IdeaTrackr.Model;
+using Microsoft.WindowsAzure.MobileServices;
 using MvvmHelpers;
 using System;
 using System.Collections.Generic;
@@ -61,16 +63,11 @@ namespace IdeaTrackr.ViewModel
                 if (!Settings.IsLoggedIn)
                 {
                     await App.AzureService.Initialize();
-                    //var user = await DependencyService.Get<IAuthentication>().LoginAsync(azureService.MobileService, MobileServiceAuthenticationProvider.MicrosoftAccount);
-                    //if (user == null)
-                    //    return;
-
-                    IsBusy = true;
+                    var user = await DependencyService.Get<IAuthentication>().LoginAsync(App.AzureService.MobileService, MobileServiceAuthenticationProvider.Twitter);
+                    if (user == null)
+                        return;
                 }
-                else
-                {
-                    IsBusy = true;
-                }
+                IsBusy = true;
                 //Xamarin.Insights.Track("IdeaAdded");
 
                 await App.AzureService.AddIdea(Idea);
