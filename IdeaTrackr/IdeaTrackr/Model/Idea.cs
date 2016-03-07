@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Humanizer;
 
 namespace IdeaTrackr.Model
 {
@@ -13,7 +10,9 @@ namespace IdeaTrackr.Model
         [Microsoft.WindowsAzure.MobileServices.Version]
         public string AzureVersion { get; set; }
 
-        public DateTime DateUtc { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
 
         public string Name { get; set; }
 
@@ -22,9 +21,6 @@ namespace IdeaTrackr.Model
         public Status Status { get; set; }
 
         [Newtonsoft.Json.JsonIgnore]
-        public string DateDisplay { get { return DateUtc.ToLocalTime().ToString("d"); } }
-
-        [Newtonsoft.Json.JsonIgnore]
-        public string TimeDisplay { get { return DateUtc.ToLocalTime().ToString("t"); } }
+        public string DateDisplay => UpdatedAt.Humanize(true);
     }
 }
