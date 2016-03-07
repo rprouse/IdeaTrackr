@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IdeaTrackr.View.IdeaListView"
+             Title="Idea Trackr">
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Grid AbsoluteLayout.LayoutFlags="All"
+              AbsoluteLayout.LayoutBounds="0,0,1,1"
+              RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ListView
+                Grid.Row="0"
+                GroupDisplayBinding="{Binding Key}"
+                IsGroupingEnabled="true"
+                HasUnevenRows="true"
+                ItemsSource="{Binding IdeasGrouped}"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                RefreshCommand="{Binding LoadIdeasCommand}"
+                x:Name="ListViewIdeas">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                <Label Text="{Binding Name}" Style="{DynamicResource ListItemTextStyle}" HorizontalOptions="FillAndExpand" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding DateDisplay}" />
+                                    <Label Text="{Binding Status}" HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End" />
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Grid.Row="1" x:Name="OfflineStack" Padding="8" IsVisible="false" BackgroundColor="#F2C500">
+                <Label TextColor="White" Text="No Connection - Offline Mode" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </StackLayout>
+        </Grid>
+        <StackLayout IsVisible="{Binding IsBusy}"
+                     Padding="32"
+                               AbsoluteLayout.LayoutFlags="PositionProportional"
+                               AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
+                               BackgroundColor="#90000000">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#3CB9A8"/>
+            <Label Text="{Binding LoadingMessage}" HorizontalOptions="Center" TextColor = "White" Style="{DynamicResource ListItemTextStyle}"/>
+        </StackLayout>
+    </AbsoluteLayout>
+</ContentPage>
