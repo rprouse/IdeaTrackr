@@ -15,7 +15,12 @@ namespace IdeaTrackr.View
         {
             InitializeComponent();
 
-            BindingContext = new IdeaViewModel(Navigation, idea);
+            var _viewModel = new IdeaViewModel(Navigation, idea);
+            BindingContext = _viewModel;
+
+
+            ToolbarItems.Add(new ToolbarItem("Save", null,
+                async () => await _viewModel.SaveIdeaAsync(), ToolbarItemOrder.Primary));
         }
     }
 }

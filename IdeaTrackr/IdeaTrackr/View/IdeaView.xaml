@@ -24,10 +24,6 @@
             <Label Text="Description" />
             <Editor Text="{Binding Idea.Description, Mode=TwoWay}" />
 
-            <Button Text="Save" Command="{Binding SaveCommand}" />
-            <!-- <Button Text="Delete" Command="{Binding DeleteCommand}" /> -->
-            <Button Text="Cancel" Command="{Binding CancelCommand}" />
-
         </StackLayout>
     </ScrollView>
 </ContentPage>

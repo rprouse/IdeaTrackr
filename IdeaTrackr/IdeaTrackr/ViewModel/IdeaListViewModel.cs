@@ -1,9 +1,7 @@
 ﻿using FormsToolkit;
 using IdeaTrackr.Helpers;
-using IdeaTrackr.Interfaces;
 using IdeaTrackr.Model;
 using IdeaTrackr.View;
-using Microsoft.WindowsAzure.MobileServices;
 using MvvmHelpers;
 using System;
 using System.Diagnostics;
@@ -15,8 +13,7 @@ namespace IdeaTrackr.ViewModel
 {
     public class IdeaListViewModel : BaseViewModel
     {
-        ICommand _loadIdeasCommand;
-        ICommand _addIdeaCommand;
+        ICommand _refreshIdeasCommand;
         string _loadingMessage;
 
         INavigation _navigation;
@@ -32,25 +29,25 @@ namespace IdeaTrackr.ViewModel
             get { return _loadingMessage; }
             set { SetProperty(ref _loadingMessage, value); }
         }
-        
-        public ICommand LoadIdeasCommand =>
-            _loadIdeasCommand ?? (_loadIdeasCommand = new Command(async () => await ExecuteLoadIdeasCommandAsync()));
 
-        async Task ExecuteLoadIdeasCommandAsync()
+        public ICommand RefreshIdeas =>
+            _refreshIdeasCommand ?? (_refreshIdeasCommand = new Command(async () => {
+                if (IsBusy) return;
+                IsBusy = true;
+                await RefreshIdeasAsync();
+                IsBusy = false;
+            }));
+
+        public async Task LoadIdeasAsync()
         {
             if (IsBusy)
                 return;
 
             try
             {
-                if (!Settings.IsLoggedIn)
-                {
-                    await App.AzureService.Initialize();
-                    var user = await DependencyService.Get<IAuthentication>().LoginAsync(App.AzureService.MobileService, MobileServiceAuthenticationProvider.Twitter);
-                    if (user == null)
-                        return;
-                }
-                
+                if (!await Authentication.AttemptLogin())
+                    return;
+
                 LoadingMessage = "Loading Ideas...";
                 IsBusy = true;
                 var ideas = await App.AzureService.GetIdeas();
@@ -69,6 +66,22 @@ namespace IdeaTrackr.ViewModel
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        public async Task RefreshIdeasAsync()
+        {
+            try
+            {
+                if (!await Authentication.AttemptLogin())
+                    return;
+
+                var ideas = await App.AzureService.GetIdeas();
+                Ideas.ReplaceRange(ideas);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
 

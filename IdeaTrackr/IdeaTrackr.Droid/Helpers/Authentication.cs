@@ -6,7 +6,7 @@ using IdeaTrackr.Interfaces;
 using IdeaTrackr.Helpers;
 using IdeaTrackr.Droid.Helpers;
 
-[assembly: Dependency(typeof(Authentication))]
+[assembly: Dependency(typeof(IdeaTrackr.Droid.Helpers.Authentication))]
 namespace IdeaTrackr.Droid.Helpers
 {
     public class Authentication : IAuthentication
@@ -21,7 +21,7 @@ namespace IdeaTrackr.Droid.Helpers
                 Settings.UserId = user?.UserId ?? string.Empty;
                 return user;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //e.Data["method"] = "LoginAsync";
                 //Xamarin.Insights.Report(e);
@@ -37,7 +37,7 @@ namespace IdeaTrackr.Droid.Helpers
                 if ((int)global::Android.OS.Build.VERSION.SdkInt >= 21)
                     global::Android.Webkit.CookieManager.Instance.RemoveAllCookies(null);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

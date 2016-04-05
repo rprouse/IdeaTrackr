@@ -49,6 +49,12 @@ namespace IdeaTrackr.Services
         {
             await Initialize();
             await SyncIdeas();
+            return await GetSyncedIdeas();
+        }
+
+        public async Task<IList<Idea>> GetSyncedIdeas()
+        {
+            await Initialize();
             return await _ideaTable.OrderByDescending(i => i.UpdatedAt).ToListAsync();
         }
 

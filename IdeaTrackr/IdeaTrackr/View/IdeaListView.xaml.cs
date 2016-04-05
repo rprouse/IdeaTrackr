@@ -19,7 +19,7 @@ namespace IdeaTrackr.View
         public IdeaListView()
         {
             InitializeComponent();
-            
+
             BindingContext = _viewModel = new IdeaListViewModel(Navigation);
 
             string addIcon = null;
@@ -46,28 +46,32 @@ namespace IdeaTrackr.View
                 ToolbarItems.Add(new ToolbarItem
                 {
                     Text = "Refresh",
-                    Command = _viewModel.LoadIdeasCommand
+                    Command = _viewModel.RefreshIdeas
                 });
             }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            CrossConnectivity.Current.ConnectivityChanged += ConnecitvityChanged;
+            CrossConnectivity.Current.ConnectivityChanged += ConnectivityChanged;
             OfflineStack.IsVisible = !CrossConnectivity.Current.IsConnected;
-            if (_viewModel.Ideas.Count == 0 && Settings.IsLoggedIn)
-                _viewModel.LoadIdeasCommand.Execute(null);
+            if (Settings.IsLoggedIn)
+            {
+                if (_viewModel.Ideas.Count == 0)
+                    await _viewModel.LoadIdeasAsync();
+                await _viewModel.RefreshIdeasAsync();
+            }
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            CrossConnectivity.Current.ConnectivityChanged -= ConnecitvityChanged;
+            CrossConnectivity.Current.ConnectivityChanged -= ConnectivityChanged;
         }
 
-        void ConnecitvityChanged(object sender, Plugin.Connectivity.Abstractions.ConnectivityChangedEventArgs e)
+        void ConnectivityChanged(object sender, Plugin.Connectivity.Abstractions.ConnectivityChangedEventArgs e)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
