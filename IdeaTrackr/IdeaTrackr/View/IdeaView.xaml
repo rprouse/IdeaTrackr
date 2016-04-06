@@ -22,7 +22,7 @@
             <Entry Text="{Binding Idea.Name, Mode=TwoWay}" Placeholder="New idea" />
 
             <Label Text="Description" />
-            <Editor Text="{Binding Idea.Description, Mode=TwoWay}" />
+            <Editor Text="{Binding Idea.Solution, Mode=TwoWay}" />
 
         </StackLayout>
     </ScrollView>

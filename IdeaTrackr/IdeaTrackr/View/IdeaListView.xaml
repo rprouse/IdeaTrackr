@@ -23,7 +23,7 @@
                     <DataTemplate>
                         <TextCell
                             Text="{Binding Name}"
-                            Detail="{Binding Description}"
+                            Detail="{Binding Solution}"
                             />
                     </DataTemplate>
                 </ListView.ItemTemplate>

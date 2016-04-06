@@ -4,6 +4,7 @@
     {
         Bad = -1,
         None = 0,
-        Good = 1
+        Good = 1,
+        Great = 2
     }
 }

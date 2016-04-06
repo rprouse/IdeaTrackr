@@ -1,4 +1,4 @@
-﻿{
+{
     "userSecretsId": "aspnet5-IdeaTracker.Web-3825d466-62e9-45e8-81d4-3542926f61c8",
     "version": "1.0.0-*",
     "compilationOptions": {
@@ -35,8 +35,16 @@
     },
 
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "dnx451": {
+            "dependencies": {
+                "IdeaTrackr.Model": "1.0.0-*"
+            }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "IdeaTrackr.Model": "1.0.0-*"
+            }
+        }
     },
 
     "exclude": [

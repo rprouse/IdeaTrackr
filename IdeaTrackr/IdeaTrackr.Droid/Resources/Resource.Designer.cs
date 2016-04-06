@@ -2496,12 +2496,6 @@ namespace IdeaTrackr.Droid
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f06001f
-			public const int ApplicationName = 2131099679;
-			
-			// aapt resource value: 0x7f06001e
-			public const int Hello = 2131099678;
-			
 			// aapt resource value: 0x7f06000b
 			public const int abc_action_bar_home_description = 2131099659;
 			
